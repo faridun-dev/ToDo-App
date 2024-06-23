@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app_project/utils/dialog_box.dart';
 import 'package:todo_app_project/utils/task_util.dart';
 
 class HomePage extends StatefulWidget {
@@ -9,6 +10,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final _controller = TextEditingController();
+
   // ? List of todos
   List toDoList = [
     ["Make something cool"],
@@ -16,6 +19,28 @@ class _HomePageState extends State<HomePage> {
     ["Fuck them all"],
     ["Doing nothing"],
   ];
+
+  void saveNewTask() {
+    setState(() {
+      toDoList.add(
+        [_controller.text],
+      );
+      _controller.clear();
+    });
+    Navigator.of(context).pop();
+  }
+
+  void createNewTask() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return DialogBox(
+          onSave: saveNewTask,
+          controller: _controller,
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,31 +69,7 @@ class _HomePageState extends State<HomePage> {
         elevation: 3,
         foregroundColor: Colors.white,
         backgroundColor: Colors.green[800],
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return const AlertDialog(
-                backgroundColor: Colors.green,
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Form(
-                      child: Column(
-                        children: [
-                          TextField(
-                            decoration: InputDecoration(),
-                          ),
-                          TextField(),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              );
-            },
-          );
-        },
+        onPressed: createNewTask,
         child: const Icon(
           Icons.add,
         ),
