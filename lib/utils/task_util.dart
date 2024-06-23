@@ -4,12 +4,16 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 // ignore: must_be_immutable
 class TaskUtil extends StatefulWidget {
   final String taskName;
+  final bool taskCompleted;
   Function(BuildContext) deleteTask;
+  Function(bool?)? onChanged;
 
   TaskUtil({
     super.key,
     required this.taskName,
     required this.deleteTask,
+    required this.taskCompleted,
+    required this.onChanged,
   });
 
   @override
@@ -58,17 +62,13 @@ class _TaskUtilState extends State<TaskUtil> {
               Checkbox(
                 checkColor: Colors.white,
                 fillColor: WidgetStateColor.transparent,
-                value: status,
-                onChanged: (value) {
-                  setState(() {
-                    status = value;
-                  });
-                },
+                value: widget.taskCompleted,
+                onChanged: widget.onChanged,
               ),
               Text(
                 widget.taskName,
                 style: TextStyle(
-                  decoration: status!
+                  decoration: widget.taskCompleted
                       ? TextDecoration.lineThrough
                       : TextDecoration.none,
                   fontSize: 17,

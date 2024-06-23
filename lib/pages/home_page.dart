@@ -14,16 +14,16 @@ class _HomePageState extends State<HomePage> {
 
   // ? List of todos
   List toDoList = [
-    ["Make something cool"],
-    ["Training"],
-    ["Fuck them all"],
-    ["Doing nothing"],
+    ["Make something cool", false],
+    ["Training", false],
+    ["Fuck them all", false],
+    ["Doing nothing", false],
   ];
 
   void saveNewTask() {
     setState(() {
       toDoList.add(
-        [_controller.text],
+        [_controller.text, false],
       );
       _controller.clear();
     });
@@ -48,6 +48,12 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void checkboxChanged(bool? value, int index) {
+    setState(() {
+      toDoList[index][1] = !toDoList[index][1];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,7 +74,9 @@ class _HomePageState extends State<HomePage> {
         itemBuilder: (context, index) {
           return TaskUtil(
             taskName: toDoList[index][0],
+            taskCompleted: toDoList[index][1],
             deleteTask: (context) => deleteTask(index),
+            onChanged: (value) => checkboxChanged(value, index),
           );
         },
       ),
