@@ -34,7 +34,7 @@ class _TaskUtilState extends State<TaskUtil> {
           ),
         ),
         padding: const EdgeInsets.all(
-          16,
+          25.0,
         ),
         child: Row(
           children: [
