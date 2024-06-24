@@ -86,6 +86,7 @@ class _HomePageState extends State<HomePage> {
         itemBuilder: (context, index) {
           return Dismissible(
             key: ValueKey(db.toDoList[index]),
+            direction: DismissDirection.endToStart,
             onDismissed: (direction) {
               deleteTask(index);
             },
