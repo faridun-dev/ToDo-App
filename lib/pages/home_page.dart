@@ -84,11 +84,33 @@ class _HomePageState extends State<HomePage> {
       body: ListView.builder(
         itemCount: db.toDoList.length,
         itemBuilder: (context, index) {
-          return TaskUtil(
-            taskName: db.toDoList[index][0],
-            taskCompleted: db.toDoList[index][1],
-            deleteTask: (context) => deleteTask(index),
-            onChanged: (value) => checkboxChanged(value, index),
+          return Dismissible(
+            key: ValueKey(db.toDoList[index]),
+            onDismissed: (direction) {
+              deleteTask(index);
+            },
+            background: Padding(
+              padding: const EdgeInsets.only(
+                left: 24,
+                right: 24,
+                top: 20,
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                child: const Icon(
+                  Icons.delete,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            child: TaskUtil(
+              taskName: db.toDoList[index][0],
+              taskCompleted: db.toDoList[index][1],
+              onChanged: (value) => checkboxChanged(value, index),
+            ),
           );
         },
       ),

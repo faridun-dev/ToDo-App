@@ -5,13 +5,11 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 class TaskUtil extends StatefulWidget {
   final String taskName;
   final bool taskCompleted;
-  Function(BuildContext) deleteTask;
   Function(bool?)? onChanged;
 
   TaskUtil({
     super.key,
     required this.taskName,
-    required this.deleteTask,
     required this.taskCompleted,
     required this.onChanged,
   });
@@ -29,54 +27,39 @@ class _TaskUtilState extends State<TaskUtil> {
       padding: const EdgeInsets.only(
         left: 24,
         right: 24,
-        top: 26,
+        top: 20,
       ),
-      child: Slidable(
-        endActionPane: ActionPane(
-          motion: const StretchMotion(),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.green[800],
+          borderRadius: const BorderRadius.all(
+            Radius.circular(
+              12,
+            ),
+          ),
+        ),
+        padding: const EdgeInsets.all(
+          25.0,
+        ),
+        child: Row(
           children: [
-            SlidableAction(
-              borderRadius: BorderRadius.circular(
-                12,
+            Checkbox(
+              checkColor: Colors.white,
+              fillColor: WidgetStateColor.transparent,
+              value: widget.taskCompleted,
+              onChanged: widget.onChanged,
+            ),
+            Text(
+              widget.taskName,
+              style: TextStyle(
+                decoration: widget.taskCompleted
+                    ? TextDecoration.lineThrough
+                    : TextDecoration.none,
+                fontSize: 17,
+                color: Colors.white,
               ),
-              onPressed: widget.deleteTask,
-              icon: Icons.delete,
-              backgroundColor: Colors.red,
             ),
           ],
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.green[800],
-            borderRadius: const BorderRadius.all(
-              Radius.circular(
-                12,
-              ),
-            ),
-          ),
-          padding: const EdgeInsets.all(
-            25.0,
-          ),
-          child: Row(
-            children: [
-              Checkbox(
-                checkColor: Colors.white,
-                fillColor: WidgetStateColor.transparent,
-                value: widget.taskCompleted,
-                onChanged: widget.onChanged,
-              ),
-              Text(
-                widget.taskName,
-                style: TextStyle(
-                  decoration: widget.taskCompleted
-                      ? TextDecoration.lineThrough
-                      : TextDecoration.none,
-                  fontSize: 17,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );
