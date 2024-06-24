@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:todo_app_project/data/database.dart';
 import 'package:todo_app_project/utils/dialog_box.dart';
 import 'package:todo_app_project/utils/task_util.dart';
 
@@ -10,24 +12,32 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Database db = Database();
+  final _dataBox = Hive.box("dataBox");
+
+  @override
+  void initState() {
+    if (_dataBox.get("TODOLIST") == null) {
+      db.createInitialData();
+    } else {
+      db.loadData();
+    }
+    super.initState();
+  }
+
   final _controller = TextEditingController();
 
   // ? List of todos
-  List toDoList = [
-    ["Make something cool", false],
-    ["Training", false],
-    ["Fuck them all", false],
-    ["Doing nothing", false],
-  ];
 
   void saveNewTask() {
     setState(() {
-      toDoList.add(
+      db.toDoList.add(
         [_controller.text, false],
       );
       _controller.clear();
     });
     Navigator.of(context).pop();
+    db.updateDataBase();
   }
 
   void createNewTask() {
@@ -44,14 +54,16 @@ class _HomePageState extends State<HomePage> {
 
   void deleteTask(int index) {
     setState(() {
-      toDoList.removeAt(index);
+      db.toDoList.removeAt(index);
     });
+    db.updateDataBase();
   }
 
   void checkboxChanged(bool? value, int index) {
     setState(() {
-      toDoList[index][1] = !toDoList[index][1];
+      db.toDoList[index][1] = !db.toDoList[index][1];
     });
+    db.updateDataBase();
   }
 
   @override
@@ -70,11 +82,11 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       body: ListView.builder(
-        itemCount: toDoList.length,
+        itemCount: db.toDoList.length,
         itemBuilder: (context, index) {
           return TaskUtil(
-            taskName: toDoList[index][0],
-            taskCompleted: toDoList[index][1],
+            taskName: db.toDoList[index][0],
+            taskCompleted: db.toDoList[index][1],
             deleteTask: (context) => deleteTask(index),
             onChanged: (value) => checkboxChanged(value, index),
           );
